@@ -29,7 +29,7 @@ public class BinaryControllerTest {
 			.andExpect(model().attribute("operand1Focused", false));
     }
 
-	    @Test
+	@Test
     public void getParameter() throws Exception {
         this.mvc.perform(get("/").param("operand1","111"))
             .andExpect(status().isOk())

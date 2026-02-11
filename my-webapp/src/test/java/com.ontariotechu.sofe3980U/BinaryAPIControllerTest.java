@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringRunner.class)
@@ -85,20 +86,13 @@ public class BinaryAPIControllerTest {
 			.andExpect(content().string("0"));
 	}
 
-	@Test
-	public void multiplyLargeNumbers() throws Exception {
-		this.mvc.perform(get("/multiply").param("operand1","1000").param("operand2","10"))
-			.andExpect(status().isOk())
-			.andExpect(content().string("10000"));
-	}
-
 	// Test cases for AND operation
 
 	@Test
 	public void and() throws Exception {
-		this.mvc.perform(get("/and").param("operand1","101").param("operand2","010"))
+		this.mvc.perform(get("/and").param("operand1","1010").param("operand2","1100"))
 			.andExpect(status().isOk())
-			.andExpect(content().string("0"));
+			.andExpect(content().string("1000"));
 	}
 
 	@Test
@@ -116,13 +110,6 @@ public class BinaryAPIControllerTest {
 		this.mvc.perform(get("/and").param("operand1","1").param("operand2","1"))
 			.andExpect(status().isOk())
 			.andExpect(content().string("1"));
-	}
-
-	@Test
-	public void andDifferentLengths() throws Exception {
-		this.mvc.perform(get("/and").param("operand1","1010").param("operand2","1100"))
-			.andExpect(status().isOk())
-			.andExpect(content().string("1000"));
 	}
 
 	// Test cases for OR operation
@@ -151,11 +138,82 @@ public class BinaryAPIControllerTest {
 			.andExpect(content().string("0"));
 	}
 
+	// Lab 1 unit test cases for OR operation
+
 	@Test
-	public void orDifferentLengths() throws Exception {
-		this.mvc.perform(get("/or").param("operand1","1").param("operand2","0"))
-			.andExpect(status().isOk())
-			.andExpect(content().string("1"));
+	public void or1() {
+		Binary b1 = new Binary("101");
+		Binary b2 = new Binary("010");
+		Binary result = Binary.or(b1, b2);
+		assertEquals("111", result.getValue());
+	}
+
+	@Test
+	public void or2() {
+		Binary b1 = new Binary("1");
+		Binary b2 = new Binary("0");
+		Binary result = Binary.or(b1, b2);
+		assertEquals("1", result.getValue());
+	}
+
+	@Test
+	public void or3() {
+		Binary b1 = new Binary("0");
+		Binary b2 = new Binary("0");
+		Binary result = Binary.or(b1, b2);
+		assertEquals("0", result.getValue());
+	}
+
+	// Lab 1 unit test cases for AND operation
+
+	@Test
+	public void and1() {
+		Binary b1 = new Binary("101");
+		Binary b2 = new Binary("010");
+		Binary result = Binary.and(b1, b2);
+		assertEquals("0", result.getValue());
+	}
+
+	@Test
+	public void and2() {
+		Binary b1 = new Binary("110");
+		Binary b2 = new Binary("010");
+		Binary result = Binary.and(b1, b2);
+		assertEquals("10", result.getValue());
+	}
+
+	@Test
+	public void and3() {
+		Binary b1 = new Binary("1");
+		Binary b2 = new Binary("1");
+		Binary result = Binary.and(b1, b2);
+		assertEquals("1", result.getValue());
+	}
+
+	// Lab 1 unit test cases for multiply operation
+
+	@Test
+	public void multiply1() {
+		Binary b1 = new Binary("10");
+		Binary b2 = new Binary("11");
+		Binary result = Binary.multiply(b1, b2);
+		assertEquals("110", result.getValue());
+	}
+
+	@Test
+	public void multiply2() {
+		Binary b1 = new Binary("0");
+		Binary b2 = new Binary("101");
+		Binary result = Binary.multiply(b1, b2);
+		assertEquals("0", result.getValue());
+	}
+
+	@Test
+	public void multiply3() {
+		Binary b1 = new Binary("1000");
+		Binary b2 = new Binary("10");
+		Binary result = Binary.multiply(b1, b2);
+		assertEquals("10000", result.getValue());
 	}
 
 }
